@@ -1,16 +1,19 @@
-//объявляем переменные
 const path = require("path");
-const CleanWebpackPlugin = require("clean-webpack-plugin");
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const CopyPlugin = require("copy-webpack-plugin");
+const webpack = require("webpack");
+const HtmlWebPackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-//формируем настройки
 module.exports = {
-    entry: { main: "./src/index.js" },
+    target: "web",
+    devtool: "inline-source-map",
     output: {
         path: path.resolve(__dirname, "dist"),
-        filename: "js/[name].js",
+    },
+    devServer: {
+        historyApiFallback: true,
+        contentBase: path.resolve(__dirname, "/dist"),
+        open: true,
+        compress: true,
     },
     module: {
         rules: [{
@@ -21,37 +24,26 @@ module.exports = {
                 },
             },
             {
-                test: /\.scss$/,
-                use: ExtractTextPlugin.extract({
-                    fallback: "style-loader",
-                    use: ["css-loader", "sass-loader"],
-                }),
+                test: /\.html$/,
+                use: [{
+                    loader: "html-loader",
+                }, ],
             },
-            //img loader
             {
-                test: /\.(svg|png|jpe?g|)$/i,
-                use: {
-                    loader: "file-loader",
-                    options: {
-                        name: "../img/[name].[ext]",
-                    },
-                },
+                test: /\.css$/,
+                use: [MiniCssExtractPlugin.loader, "css-loader"],
             },
         ],
     },
     plugins: [
-        new CleanWebpackPlugin(),
-        new ExtractTextPlugin({
-            filename: "css/style.css",
-            disable: false,
-            allChunks: true,
-        }),
-        new CopyPlugin([{ from: "src/img", to: "img" }]),
-        new HtmlWebpackPlugin({
-            inject: false,
-            hash: true,
+        new HtmlWebPackPlugin({
             template: "./src/index.html",
-            filename: "index.html",
+            filename: "./index.html",
         }),
+        new MiniCssExtractPlugin({
+            filename: "[name].css",
+            chunkFilename: "[id].css",
+        }),
+        new webpack.HotModuleReplacementPlugin(),
     ],
 };
