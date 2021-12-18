@@ -4,8 +4,8 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "start": "webpack serve --mode development",
-        "build": "webpack",
+        "start": "webpack serve --config webpack.dev.js",
+        "build": "webpack --config webpack.prod.js",
         "dev": "webpack --mode development",
         "lint": "eslint .",
         "test": "jest --passWithNoTests",
@@ -41,11 +41,13 @@
         "jsdoc": "^3.6.6",
         "live-server": "^1.2.1",
         "mini-css-extract-plugin": "^1.3.3",
+        "optimize-css-assets-webpack-plugin": "^6.0.1",
         "sass-loader": "^12.4.0",
         "style-loader": "^3.3.1",
         "webpack": "^5.65.0",
         "webpack-cli": "^4.9.1",
-        "webpack-dev-server": "^3.11.1"
+        "webpack-dev-server": "^3.11.1",
+        "webpack-merge": "^5.8.0"
     },
     "dependencies": {
         "core-js": "^3.8.2"
